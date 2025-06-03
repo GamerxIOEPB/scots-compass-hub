@@ -1,132 +1,240 @@
 
 import React, { useState } from 'react';
+import { Calendar, Clock, BookOpen, Users, ChevronDown, ChevronRight } from 'lucide-react';
 
 const Datesheet = () => {
-  const [activeExam, setActiveExam] = useState<string | null>(null);
+  const [expandedExams, setExpandedExams] = useState<string[]>([]);
 
-  const examData = {
-    'pa1': {
-      title: 'Periodic Assessment 1 (P.A.1)',
-      dates: [
-        { date: '15th March 2024', day: 'Monday', subject: 'Mathematics', time: '9:00 AM - 12:00 PM' },
-        { date: '17th March 2024', day: 'Wednesday', subject: 'Science', time: '9:00 AM - 12:00 PM' },
-        { date: '19th March 2024', day: 'Friday', subject: 'English', time: '9:00 AM - 12:00 PM' },
-        { date: '21st March 2024', day: 'Monday', subject: 'Social Studies', time: '9:00 AM - 12:00 PM' },
-        { date: '23rd March 2024', day: 'Wednesday', subject: 'Hindi', time: '9:00 AM - 12:00 PM' },
-      ]
+  const examTypes = [
+    {
+      id: 'unit-test-1',
+      name: 'Unit Test 1',
+      period: 'September 2024',
+      status: 'Completed',
+      color: 'bg-green-500'
     },
-    'halfyearly': {
-      title: 'Half Yearly Examination',
-      dates: [
-        { date: '1st October 2024', day: 'Tuesday', subject: 'Mathematics', time: '9:00 AM - 12:00 PM' },
-        { date: '3rd October 2024', day: 'Thursday', subject: 'Science', time: '9:00 AM - 12:00 PM' },
-        { date: '5th October 2024', day: 'Saturday', subject: 'English', time: '9:00 AM - 12:00 PM' },
-        { date: '7th October 2024', day: 'Monday', subject: 'Social Studies', time: '9:00 AM - 12:00 PM' },
-        { date: '9th October 2024', day: 'Wednesday', subject: 'Hindi', time: '9:00 AM - 12:00 PM' },
-        { date: '11th October 2024', day: 'Friday', subject: 'French', time: '9:00 AM - 12:00 PM' },
-        { date: '13th October 2024', day: 'Sunday', subject: 'Computer Science', time: '9:00 AM - 12:00 PM' },
-      ]
+    {
+      id: 'mid-term',
+      name: 'Mid Term Examination',
+      period: 'November 2024',
+      status: 'Upcoming',
+      color: 'bg-blue-500'
     },
-    'pa2': {
-      title: 'Periodic Assessment 2 (P.A.2)',
-      dates: [
-        { date: '15th January 2025', day: 'Wednesday', subject: 'Mathematics', time: '9:00 AM - 12:00 PM' },
-        { date: '17th January 2025', day: 'Friday', subject: 'Science', time: '9:00 AM - 12:00 PM' },
-        { date: '20th January 2025', day: 'Monday', subject: 'English', time: '9:00 AM - 12:00 PM' },
-        { date: '22nd January 2025', day: 'Wednesday', subject: 'Social Studies', time: '9:00 AM - 12:00 PM' },
-        { date: '24th January 2025', day: 'Friday', subject: 'Hindi', time: '9:00 AM - 12:00 PM' },
-      ]
+    {
+      id: 'unit-test-2',
+      name: 'Unit Test 2',
+      period: 'January 2025',
+      status: 'Scheduled',
+      color: 'bg-yellow-500'
     },
-    'final': {
-      title: 'Final Examination',
-      dates: [
-        { date: '1st March 2025', day: 'Saturday', subject: 'Mathematics', time: '9:00 AM - 12:00 PM' },
-        { date: '4th March 2025', day: 'Tuesday', subject: 'Science', time: '9:00 AM - 12:00 PM' },
-        { date: '6th March 2025', day: 'Thursday', subject: 'English', time: '9:00 AM - 12:00 PM' },
-        { date: '8th March 2025', day: 'Saturday', subject: 'Social Studies', time: '9:00 AM - 12:00 PM' },
-        { date: '10th March 2025', day: 'Monday', subject: 'Hindi', time: '9:00 AM - 12:00 PM' },
-        { date: '12th March 2025', day: 'Wednesday', subject: 'French', time: '9:00 AM - 12:00 PM' },
-        { date: '14th March 2025', day: 'Friday', subject: 'Computer Science', time: '9:00 AM - 12:00 PM' },
+    {
+      id: 'final-exam',
+      name: 'Final Examination',
+      period: 'March 2025',
+      status: 'Scheduled',
+      color: 'bg-purple-500'
+    }
+  ];
+
+  const getExamSchedule = (examId: string) => {
+    const schedules = {
+      'unit-test-1': [
+        { date: '2024-09-15', time: '9:00 AM - 12:00 PM', subject: 'Mathematics', class: 'All Classes', room: 'Main Hall' },
+        { date: '2024-09-16', time: '9:00 AM - 12:00 PM', subject: 'English', class: 'All Classes', room: 'Main Hall' },
+        { date: '2024-09-17', time: '9:00 AM - 12:00 PM', subject: 'Science', class: 'All Classes', room: 'Main Hall' },
+        { date: '2024-09-18', time: '9:00 AM - 12:00 PM', subject: 'Social Studies', class: 'All Classes', room: 'Main Hall' },
+      ],
+      'mid-term': [
+        { date: '2024-11-20', time: '9:00 AM - 12:00 PM', subject: 'Mathematics', class: 'Classes 6-12', room: 'Exam Hall A' },
+        { date: '2024-11-21', time: '9:00 AM - 12:00 PM', subject: 'English', class: 'Classes 6-12', room: 'Exam Hall A' },
+        { date: '2024-11-22', time: '9:00 AM - 12:00 PM', subject: 'Science', class: 'Classes 6-12', room: 'Exam Hall A' },
+        { date: '2024-11-23', time: '9:00 AM - 12:00 PM', subject: 'Social Studies', class: 'Classes 6-12', room: 'Exam Hall A' },
+        { date: '2024-11-25', time: '9:00 AM - 12:00 PM', subject: 'Hindi', class: 'Classes 6-12', room: 'Exam Hall B' },
+        { date: '2024-11-26', time: '9:00 AM - 12:00 PM', subject: 'Computer Science', class: 'Classes 9-12', room: 'Computer Lab' },
+      ],
+      'unit-test-2': [
+        { date: '2025-01-20', time: '9:00 AM - 12:00 PM', subject: 'Mathematics', class: 'All Classes', room: 'Main Hall' },
+        { date: '2025-01-21', time: '9:00 AM - 12:00 PM', subject: 'English', class: 'All Classes', room: 'Main Hall' },
+        { date: '2025-01-22', time: '9:00 AM - 12:00 PM', subject: 'Science', class: 'All Classes', room: 'Main Hall' },
+        { date: '2025-01-23', time: '9:00 AM - 12:00 PM', subject: 'Social Studies', class: 'All Classes', room: 'Main Hall' },
+      ],
+      'final-exam': [
+        { date: '2025-03-15', time: '9:00 AM - 12:00 PM', subject: 'Mathematics', class: 'All Classes', room: 'Exam Hall A' },
+        { date: '2025-03-17', time: '9:00 AM - 12:00 PM', subject: 'English', class: 'All Classes', room: 'Exam Hall A' },
+        { date: '2025-03-19', time: '9:00 AM - 12:00 PM', subject: 'Science', class: 'All Classes', room: 'Exam Hall A' },
+        { date: '2025-03-21', time: '9:00 AM - 12:00 PM', subject: 'Social Studies', class: 'All Classes', room: 'Exam Hall A' },
+        { date: '2025-03-23', time: '9:00 AM - 12:00 PM', subject: 'Hindi', class: 'All Classes', room: 'Exam Hall B' },
+        { date: '2025-03-25', time: '9:00 AM - 12:00 PM', subject: 'Computer Science', class: 'Classes 9-12', room: 'Computer Lab' },
+        { date: '2025-03-27', time: '9:00 AM - 12:00 PM', subject: 'French', class: 'Classes 6-12', room: 'Language Lab' },
       ]
+    };
+    return schedules[examId] || [];
+  };
+
+  const toggleExam = (examId: string) => {
+    setExpandedExams(prev => 
+      prev.includes(examId) 
+        ? prev.filter(id => id !== examId)
+        : [...prev, examId]
+    );
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Completed':
+        return 'text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300';
+      case 'Upcoming':
+        return 'text-blue-600 bg-blue-100 dark:bg-blue-900 dark:text-blue-300';
+      case 'Scheduled':
+        return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900 dark:text-yellow-300';
+      default:
+        return 'text-gray-600 bg-gray-100 dark:bg-gray-900 dark:text-gray-300';
     }
   };
 
-  const examButtons = [
-    { id: 'pa1', label: 'P.A.1', color: 'bg-blue-500 hover:bg-blue-600' },
-    { id: 'halfyearly', label: 'Half Yearly', color: 'bg-green-500 hover:bg-green-600' },
-    { id: 'pa2', label: 'P.A.2', color: 'bg-purple-500 hover:bg-purple-600' },
-    { id: 'final', label: 'Final Tests', color: 'bg-red-500 hover:bg-red-600' },
-  ];
-
   return (
     <div className="space-y-8">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-2">Examination Schedule</h1>
-        <p className="text-muted-foreground">View exam dates and timings</p>
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold mb-2">📅 Examination Schedule</h1>
+        <p className="text-muted-foreground">View exam dates and schedules for all classes</p>
       </div>
 
-      {/* Exam Buttons */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {examButtons.map((exam) => (
-          <button
-            key={exam.id}
-            onClick={() => setActiveExam(activeExam === exam.id ? null : exam.id)}
-            className={`${exam.color} text-white p-6 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 ${
-              activeExam === exam.id ? 'ring-4 ring-white/20' : ''
-            }`}
-          >
-            <div className="text-center">
-              <h3 className="text-lg font-semibold">{exam.label}</h3>
-              <p className="text-sm opacity-90 mt-1">
-                {activeExam === exam.id ? 'Click to hide' : 'Click to view'}
-              </p>
-            </div>
-          </button>
-        ))}
-      </div>
-
-      {/* Exam Schedule Table */}
-      {activeExam && (
-        <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-lg animate-fade-in">
-          <div className="p-6 border-b border-border">
-            <h2 className="text-2xl font-bold">{examData[activeExam as keyof typeof examData].title}</h2>
-          </div>
+      {/* Exam Types */}
+      <div className="space-y-6">
+        {examTypes.map((exam) => {
+          const isExpanded = expandedExams.includes(exam.id);
+          const schedule = getExamSchedule(exam.id);
           
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-accent/50">
-                <tr>
-                  <th className="px-6 py-4 text-left font-semibold">Date</th>
-                  <th className="px-6 py-4 text-left font-semibold">Day</th>
-                  <th className="px-6 py-4 text-left font-semibold">Subject</th>
-                  <th className="px-6 py-4 text-left font-semibold">Time</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {examData[activeExam as keyof typeof examData].dates.map((exam, index) => (
-                  <tr key={index} className="hover:bg-accent/30 transition-colors">
-                    <td className="px-6 py-4 font-medium">{exam.date}</td>
-                    <td className="px-6 py-4 text-muted-foreground">{exam.day}</td>
-                    <td className="px-6 py-4">
-                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                        {exam.subject}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-muted-foreground">{exam.time}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          return (
+            <div key={exam.id} className="space-y-4">
+              {/* Exam Header */}
+              <button
+                onClick={() => toggleExam(exam.id)}
+                className={`w-full p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
+                  isExpanded 
+                    ? 'bg-primary text-primary-foreground border-primary shadow-lg' 
+                    : 'bg-card border-border hover:bg-accent'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-4 h-4 rounded-full ${exam.color}`}></div>
+                    <div className="text-left">
+                      <h3 className="text-xl font-bold">{exam.name}</h3>
+                      <p className={`text-sm ${isExpanded ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                        {exam.period}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(exam.status)}`}>
+                      {exam.status}
+                    </span>
+                    {isExpanded ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+                  </div>
+                </div>
+              </button>
+
+              {/* Exam Schedule Table */}
+              {isExpanded && (
+                <div className="bg-card rounded-xl border border-border overflow-hidden animate-fade-in">
+                  <div className="p-4 bg-accent/20 border-b border-border">
+                    <h4 className="font-semibold flex items-center space-x-2">
+                      <Calendar size={18} />
+                      <span>Examination Timetable</span>
+                    </h4>
+                  </div>
+                  
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-accent/10">
+                        <tr>
+                          <th className="p-4 text-left font-medium">Date</th>
+                          <th className="p-4 text-left font-medium">Time</th>
+                          <th className="p-4 text-left font-medium">Subject</th>
+                          <th className="p-4 text-left font-medium">Classes</th>
+                          <th className="p-4 text-left font-medium">Venue</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {schedule.map((item, index) => (
+                          <tr key={index} className="border-t border-border hover:bg-accent/5 transition-colors">
+                            <td className="p-4">
+                              <div className="flex items-center space-x-2">
+                                <Calendar size={16} className="text-primary" />
+                                <span className="font-medium">
+                                  {new Date(item.date).toLocaleDateString('en-US', { 
+                                    weekday: 'short', 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                  })}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center space-x-2">
+                                <Clock size={16} className="text-muted-foreground" />
+                                <span>{item.time}</span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center space-x-2">
+                                <BookOpen size={16} className="text-blue-500" />
+                                <span className="font-medium">{item.subject}</span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center space-x-2">
+                                <Users size={16} className="text-green-500" />
+                                <span>{item.class}</span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <span className="px-2 py-1 bg-accent/20 rounded-md text-sm">
+                                {item.room}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Instructions */}
+      <div className="bg-card rounded-2xl p-6 border border-border">
+        <h3 className="text-lg font-bold mb-4">📋 Examination Instructions</h3>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <div className="flex items-start space-x-2">
+            <div className="w-2 h-2 rounded-full bg-primary mt-2"></div>
+            <p>Students must report to the examination hall 15 minutes before the scheduled time.</p>
+          </div>
+          <div className="flex items-start space-x-2">
+            <div className="w-2 h-2 rounded-full bg-primary mt-2"></div>
+            <p>Bring your admit card and valid school ID to the examination hall.</p>
+          </div>
+          <div className="flex items-start space-x-2">
+            <div className="w-2 h-2 rounded-full bg-primary mt-2"></div>
+            <p>Electronic devices including mobile phones are strictly prohibited.</p>
+          </div>
+          <div className="flex items-start space-x-2">
+            <div className="w-2 h-2 rounded-full bg-primary mt-2"></div>
+            <p>Use only blue or black ink pens for writing the examination.</p>
           </div>
         </div>
-      )}
+      </div>
 
-      {!activeExam && (
+      {expandedExams.length === 0 && (
         <div className="text-center py-12">
           <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
-            <span className="text-4xl">📅</span>
+            <span className="text-4xl">📋</span>
           </div>
-          <p className="text-muted-foreground">Select an exam type to view the schedule</p>
+          <p className="text-muted-foreground">Click on an examination to view the detailed schedule</p>
         </div>
       )}
     </div>

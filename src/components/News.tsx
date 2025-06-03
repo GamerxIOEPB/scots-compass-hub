@@ -1,8 +1,11 @@
 
-import React from 'react';
-import { Calendar, Clock, Users } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Calendar, Clock, Users, Search, Filter } from 'lucide-react';
 
 const News = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
   const newsItems = [
     {
       id: 1,
@@ -48,8 +51,28 @@ const News = () => {
       time: "03:00 PM",
       category: "Library",
       priority: "low"
+    },
+    {
+      id: 6,
+      title: "Art Competition Winners",
+      content: "Congratulations to all students who participated in the Inter-House Art Competition. Winners will be announced in the morning assembly.",
+      date: "2024-11-10",
+      time: "02:30 PM",
+      category: "Academic",
+      priority: "low"
     }
   ];
+
+  const categories = ['All', 'Events', 'Schedule', 'Meeting', 'Academic', 'Library'];
+
+  const filteredNews = useMemo(() => {
+    return newsItems.filter(news => {
+      const matchesSearch = news.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          news.content.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'All' || news.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchTerm, selectedCategory]);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -88,11 +111,38 @@ const News = () => {
         <p className="text-muted-foreground">Stay updated with the latest announcements and events</p>
       </div>
 
+      {/* Search and Filter Section */}
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
+          <input
+            type="text"
+            placeholder="Search news..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Filter size={20} className="text-muted-foreground" />
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            {categories.map(category => (
+              <option key={category} value={category}>{category}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* News Items */}
       <div className="grid gap-6">
-        {newsItems.map((news) => (
+        {filteredNews.map((news) => (
           <div
             key={news.id}
-            className={`border-l-4 rounded-lg border border-border p-6 transition-all duration-200 hover:shadow-lg ${getPriorityColor(news.priority)}`}
+            className={`border-l-4 rounded-lg border border-border p-6 transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${getPriorityColor(news.priority)}`}
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center space-x-3">
@@ -138,6 +188,15 @@ const News = () => {
           </div>
         ))}
       </div>
+
+      {filteredNews.length === 0 && (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
+            <span className="text-2xl">🔍</span>
+          </div>
+          <p className="text-muted-foreground">No news found matching your search criteria.</p>
+        </div>
+      )}
 
       <div className="text-center py-8">
         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
