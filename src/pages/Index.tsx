@@ -2,9 +2,8 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import HomePage from '../components/HomePage';
-import ClassDashboard from '../components/ClassDashboard';
+import Assignments from '../components/Assignments';
 import Datesheet from '../components/Datesheet';
-import ProfileMenu from '../components/ProfileMenu';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../hooks/useTheme';
 
@@ -16,16 +15,10 @@ const Index = () => {
     switch (currentPage) {
       case 'home':
         return <HomePage />;
-      case 'files':
-        return <ClassDashboard />;
+      case 'assignments':
+        return <Assignments />;
       case 'datesheet':
         return <Datesheet />;
-      case 'chat':
-        return (
-          <div className="flex items-center justify-center h-64">
-            <p className="text-lg text-muted-foreground">Chat feature coming soon!</p>
-          </div>
-        );
       default:
         return <HomePage />;
     }
@@ -50,7 +43,6 @@ const Index = () => {
               {/* Top Right Controls */}
               <div className="flex items-center gap-4">
                 <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
-                <ProfileMenu />
               </div>
             </div>
           </header>

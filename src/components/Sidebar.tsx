@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Folder, Mail, Calendar } from 'lucide-react';
+import { Home, Folder, Calendar } from 'lucide-react';
 
 interface SidebarProps {
   currentPage: string;
@@ -10,8 +10,7 @@ interface SidebarProps {
 const Sidebar = ({ currentPage, onPageChange }: SidebarProps) => {
   const navItems = [
     { id: 'home', icon: Home, label: 'Home', emoji: '🏠' },
-    { id: 'files', icon: Folder, label: 'Files', emoji: '📂' },
-    { id: 'chat', icon: Mail, label: 'Chat', emoji: '✉️' },
+    { id: 'assignments', icon: Folder, label: 'Assignments', emoji: '📂' },
     { id: 'datesheet', icon: Calendar, label: 'Datesheet', emoji: '📅' },
   ];
 
