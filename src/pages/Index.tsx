@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import HomePage from '../components/HomePage';
 import Assignments from '../components/Assignments';
 import Datesheet from '../components/Datesheet';
+import News from '../components/News';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../hooks/useTheme';
 
@@ -19,6 +20,8 @@ const Index = () => {
         return <Assignments />;
       case 'datesheet':
         return <Datesheet />;
+      case 'news':
+        return <News />;
       default:
         return <HomePage />;
     }
@@ -32,14 +35,7 @@ const Index = () => {
         <div className="flex-1 ml-16 lg:ml-20">
           {/* Header */}
           <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-16 items-center justify-between">
-              {/* About Bar */}
-              <div className="flex-1 text-center">
-                <p className="text-sm text-muted-foreground px-4">
-                  About: This page was made by a student in the school 'St Andrews Scots Sr. Sec. School'
-                </p>
-              </div>
-              
+            <div className="container flex h-16 items-center justify-end">
               {/* Top Right Controls */}
               <div className="flex items-center gap-4">
                 <ThemeToggle isDark={isDark} onToggle={toggleTheme} />

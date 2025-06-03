@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Folder, Calendar } from 'lucide-react';
+import { Home, Folder, Calendar, Newspaper } from 'lucide-react';
 
 interface SidebarProps {
   currentPage: string;
@@ -12,6 +12,7 @@ const Sidebar = ({ currentPage, onPageChange }: SidebarProps) => {
     { id: 'home', icon: Home, label: 'Home', emoji: '🏠' },
     { id: 'assignments', icon: Folder, label: 'Assignments', emoji: '📂' },
     { id: 'datesheet', icon: Calendar, label: 'Datesheet', emoji: '📅' },
+    { id: 'news', icon: Newspaper, label: 'News', emoji: '📰' },
   ];
 
   return (

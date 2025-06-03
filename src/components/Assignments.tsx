@@ -62,11 +62,11 @@ const Assignments = () => {
     <div className="space-y-8">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold mb-2">Class Assignments</h1>
-        <p className="text-muted-foreground">Select your class to view subject assignments</p>
+        <p className="text-muted-foreground">Select your class and subject to view assignments</p>
       </div>
 
-      {/* Classes Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+      {/* Classes and Assignments Layout */}
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
         {classes.map((classItem) => {
           const isExpanded = expandedClasses.includes(classItem.id);
           
@@ -88,7 +88,7 @@ const Assignments = () => {
                 </div>
               </button>
 
-              {/* Subjects for this class */}
+              {/* Subjects and Assignments for this class */}
               {isExpanded && (
                 <div className="space-y-3 animate-fade-in">
                   {subjects.map((subject) => {
@@ -96,7 +96,7 @@ const Assignments = () => {
                     const isSubjectExpanded = expandedSubjects.includes(subjectKey);
                     
                     return (
-                      <div key={subject.id} className="ml-4">
+                      <div key={subject.id} className="space-y-3">
                         {/* Subject Header */}
                         <button
                           onClick={() => toggleSubject(subjectKey)}
@@ -113,7 +113,7 @@ const Assignments = () => {
 
                         {/* Assignments for this subject */}
                         {isSubjectExpanded && (
-                          <div className="mt-3 ml-4 space-y-3 animate-fade-in">
+                          <div className="space-y-3 animate-fade-in">
                             {Object.entries(getSampleAssignments(classItem.name, subject.name)).map(([category, assignments]) => (
                               <div key={category} className="bg-background rounded-xl border border-border overflow-hidden">
                                 <div className="p-3 border-b border-border bg-accent/20">
@@ -126,8 +126,9 @@ const Assignments = () => {
                                 </div>
                                 <div className="p-3 space-y-2">
                                   {assignments.map((assignment, index) => (
-                                    <div key={index} className="p-2 bg-accent/10 rounded-lg border border-border/50">
-                                      <p className="text-sm">{assignment}</p>
+                                    <div key={index} className="p-3 bg-accent/10 rounded-lg border border-border/50 hover:bg-accent/20 transition-colors">
+                                      <p className="text-sm font-medium">{assignment}</p>
+                                      <p className="text-xs text-muted-foreground mt-1">Due: Next class</p>
                                     </div>
                                   ))}
                                 </div>
