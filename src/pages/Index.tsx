@@ -1,11 +1,65 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import Sidebar from '../components/Sidebar';
+import HomePage from '../components/HomePage';
+import ClassDashboard from '../components/ClassDashboard';
+import Datesheet from '../components/Datesheet';
+import ProfileMenu from '../components/ProfileMenu';
+import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../hooks/useTheme';
 
 const Index = () => {
+  const [currentPage, setCurrentPage] = useState('home');
+  const { isDark, toggleTheme } = useTheme();
+
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'home':
+        return <HomePage />;
+      case 'files':
+        return <ClassDashboard />;
+      case 'datesheet':
+        return <Datesheet />;
+      case 'chat':
+        return (
+          <div className="flex items-center justify-center h-64">
+            <p className="text-lg text-muted-foreground">Chat feature coming soon!</p>
+          </div>
+        );
+      default:
+        return <HomePage />;
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'dark' : ''}`}>
+      <div className="flex w-full min-h-screen bg-background text-foreground">
+        <Sidebar currentPage={currentPage} onPageChange={setCurrentPage} />
+        
+        <div className="flex-1 ml-16 lg:ml-20">
+          {/* Header */}
+          <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container flex h-16 items-center justify-between">
+              {/* About Bar */}
+              <div className="flex-1 text-center">
+                <p className="text-sm text-muted-foreground px-4">
+                  About: This page was made by a student in the school 'St Andrews Scots Sr. Sec. School'
+                </p>
+              </div>
+              
+              {/* Top Right Controls */}
+              <div className="flex items-center gap-4">
+                <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+                <ProfileMenu />
+              </div>
+            </div>
+          </header>
+
+          {/* Main Content */}
+          <main className="container py-6">
+            {renderCurrentPage()}
+          </main>
+        </div>
       </div>
     </div>
   );
